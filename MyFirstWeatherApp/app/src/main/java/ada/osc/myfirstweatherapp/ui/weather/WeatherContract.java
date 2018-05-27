@@ -1,39 +1,26 @@
 package ada.osc.myfirstweatherapp.ui.weather;
 
-import ada.osc.myfirstweatherapp.model.WeatherResponse;
+public interface WeatherContract {
 
-public class WeatherContract {
+    interface View {
 
-    public interface View {
+        void createWeatherIconValue(String description);
 
-        void showWeather(WeatherResponse data);
-
-        void setCurrentTemperatureValues(double temperatureValues);
-
-        void setMinTemperatureValues(double minTemperatureValues);
-
-        void setMaxTemperatureValues(double maxTemperatureValues);
-
-        void setPressureValues(double pressureValues);
-
-        void setWindValues(double windValues);
+        void handleItemSelectedClick(int itemId);
 
         void setWeatherIcon(String iconPath);
 
-        void setDescriptionValues(String descriptionValues);
+        double toCelsiusFromKelvin(double temperature);
 
-        void refreshCurrentData();
+        void initToolbar();
 
-        void toastMessage(String message);
+        void initNavigationDrawer();
 
-        void checkIsConnected();
+        void initViewPager();
     }
 
-    public interface Presenter {
+    interface Presenter {
 
         void setView(View weatherView);
-
-        void getWeather(String appId, String cityToDisplay);
-
     }
 }

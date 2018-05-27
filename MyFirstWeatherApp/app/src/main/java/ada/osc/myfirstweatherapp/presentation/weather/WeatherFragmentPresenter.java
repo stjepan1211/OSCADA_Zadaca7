@@ -1,26 +1,26 @@
-package ada.osc.myfirstweatherapp.presentation;
+package ada.osc.myfirstweatherapp.presentation.weather;
 
 import ada.osc.myfirstweatherapp.Constants;
 import ada.osc.myfirstweatherapp.interactor.ApiInteractor;
 import ada.osc.myfirstweatherapp.model.WeatherResponse;
-import ada.osc.myfirstweatherapp.ui.weather.WeatherContract;
+import ada.osc.myfirstweatherapp.ui.weather.fragments.WeatherFragmentContract;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class WeatherPresenter implements WeatherContract.Presenter {
+public class WeatherFragmentPresenter implements WeatherFragmentContract.Presenter {
 
     private final ApiInteractor mApiInteractor;
 
-    private WeatherContract.View mWeatherView;
+    private WeatherFragmentContract.View mWeatherView;
 
-    public WeatherPresenter(ApiInteractor apiInteractor) {
+    public WeatherFragmentPresenter(ApiInteractor apiInteractor) {
         this.mApiInteractor = apiInteractor;
     }
 
 
     @Override
-    public void setView(WeatherContract.View weatherView) {
+    public void setView(WeatherFragmentContract.View weatherView) {
         this.mWeatherView = weatherView;
     }
 

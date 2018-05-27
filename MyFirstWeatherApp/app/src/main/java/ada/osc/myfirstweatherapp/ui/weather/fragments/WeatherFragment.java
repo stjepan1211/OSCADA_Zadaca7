@@ -1,4 +1,4 @@
-package ada.osc.myfirstweatherapp.ui.weather;
+package ada.osc.myfirstweatherapp.ui.weather.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +16,7 @@ import ada.osc.myfirstweatherapp.App;
 import ada.osc.myfirstweatherapp.Constants;
 import ada.osc.myfirstweatherapp.R;
 import ada.osc.myfirstweatherapp.model.WeatherResponse;
-import ada.osc.myfirstweatherapp.presentation.WeatherPresenter;
+import ada.osc.myfirstweatherapp.presentation.weather.WeatherFragmentPresenter;
 import ada.osc.myfirstweatherapp.util.NetworkUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Filip on 26/03/2016.
  */
-public class WeatherFragment extends Fragment implements WeatherContract.View{
+public class WeatherFragment extends Fragment implements WeatherFragmentContract.View{
 
     @BindView(R.id.weather_display_current_temperature_text_view) TextView mCurrentTemperature;
     @BindView(R.id.weather_fragment_min_temperature_text_view) TextView mMinTemperature;
@@ -34,7 +34,7 @@ public class WeatherFragment extends Fragment implements WeatherContract.View{
     @BindView(R.id.weather_display_detailed_description_text_view) TextView mDescription;
     @BindView(R.id.weather_display_weather_icon_image_view) ImageView mWeatherIcon;
 
-    private WeatherContract.Presenter mPresenter;
+    private WeatherFragmentContract.Presenter mPresenter;
 
 
     public static WeatherFragment newInstance(String city) {
@@ -56,7 +56,7 @@ public class WeatherFragment extends Fragment implements WeatherContract.View{
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        mPresenter = new WeatherPresenter(App.getApiInteractor());
+        mPresenter = new WeatherFragmentPresenter(App.getApiInteractor());
         mPresenter.setView(this);
     }
 

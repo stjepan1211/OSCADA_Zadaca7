@@ -16,24 +16,22 @@ import java.util.ArrayList;
 import ada.osc.myfirstweatherapp.Constants;
 import ada.osc.myfirstweatherapp.R;
 import ada.osc.myfirstweatherapp.model.LocationWrapper;
+import ada.osc.myfirstweatherapp.presentation.weather.WeatherActivityPresenter;
 import ada.osc.myfirstweatherapp.ui.CustomViewPagerFragmentAdapter;
-import ada.osc.myfirstweatherapp.ui.addLocation.AddNewLocationActivity;
+import ada.osc.myfirstweatherapp.ui.addLocation.AddLocationActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WeatherActivity extends AppCompatActivity {
+public class WeatherActivity extends AppCompatActivity implements WeatherContract.View{
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.main_activity_drawer_layout) DrawerLayout drawerLayout;
+    @BindView(R.id.main_activity_drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.main_activity_navigation_view) NavigationView mNavigationView;
-    @BindView(R.id.main_activity_view_pager) ViewPager viewPager;
+    @BindView(R.id.main_activity_view_pager) ViewPager mViewPager;
 
+    private CustomViewPagerFragmentAdapter mAdapter;
+    private WeatherContract.Presenter mPresenter;
 
-    /*private Toolbar mToolbar;
-    private DrawerLayout drawerLayout;
-    private NavigationView mNavigationView;
-    private ViewPager viewPager;*/
-    private CustomViewPagerFragmentAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +42,16 @@ public class WeatherActivity extends AppCompatActivity {
         initViewPager();
         initToolbar();
 
-        adapter = new CustomViewPagerFragmentAdapter(getSupportFragmentManager());
+        mPresenter = new WeatherActivityPresenter();
+        mPresenter.setView(this);
+
+        mAdapter = new CustomViewPagerFragmentAdapter(getSupportFragmentManager());
 
         ArrayList<LocationWrapper> locationWrappers = new ArrayList<>();
         locationWrappers.add(new LocationWrapper("Osijek"));
 
-        adapter.setAdapterData(locationWrappers);
-        viewPager.setAdapter(adapter);
+        mAdapter.setAdapterData(locationWrappers);
+        mViewPager.setAdapter(mAdapter);
     }
 
     @Override
@@ -63,49 +64,13 @@ public class WeatherActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (android.R.id.home):
-                drawerLayout.openDrawer(GravityCompat.START);
+                mDrawerLayout.openDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void initViewPager() {
-        if (viewPager != null) {
-            viewPager.setOffscreenPageLimit(3);
-        }
-    }
-
-    private void initNavigationDrawer() {
-        //mNavigationView = (NavigationView) findViewById(R.id.main_activity_navigation_view);
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                handleItemSelectedClick(item.getItemId());
-                return false;
-            }
-        });
-    }
-
-    private void initToolbar() {
-        setSupportActionBar(mToolbar);
-        mToolbar.setTitle(R.string.main_activity_title);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
-    }
-
-    private void handleItemSelectedClick(int itemID) {
-        switch (itemID) {
-            case R.id.menu_add_new_location: {
-                startActivity(new Intent(this, AddNewLocationActivity.class));
-                drawerLayout.closeDrawers();
-                break;
-            }
-        }
-    }
-
-    private void createWeatherIconValue(String description) {
+    @Override
+    public void createWeatherIconValue(String description) {
         if (description != null)
             switch (description) {
                 case Constants.SNOW_CASE: {
@@ -140,12 +105,53 @@ public class WeatherActivity extends AppCompatActivity {
             }
     }
 
-    // TODO: 18/05/2018 load image using the constants (hint image base + path)
-    private void setWeatherIcon(String iconPath) {
+    @Override
+    public void handleItemSelectedClick(int itemId) {
+        switch (itemId) {
+            case R.id.menu_add_new_location: {
+                startActivity(new Intent(this, AddLocationActivity.class));
+                mDrawerLayout.closeDrawers();
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void setWeatherIcon(String iconPath) {
 
     }
 
-    private double toCelsiusFromKelvin(double temperature) {
+    @Override
+    public double toCelsiusFromKelvin(double temperature) {
         return temperature - 273;
+    }
+
+    @Override
+    public void initToolbar() {
+        setSupportActionBar(mToolbar);
+        mToolbar.setTitle(R.string.main_activity_title);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+    }
+
+    @Override
+    public void initNavigationDrawer() {
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                handleItemSelectedClick(item.getItemId());
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void initViewPager() {
+        if (mViewPager != null) {
+            mViewPager.setOffscreenPageLimit(3);
+        }
     }
 }

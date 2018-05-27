@@ -6,12 +6,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-import ada.osc.myfirstweatherapp.ui.weather.WeatherFragment;
+import ada.osc.myfirstweatherapp.ui.weather.fragments.WeatherFragment;
 import ada.osc.myfirstweatherapp.model.LocationWrapper;
 
 public class CustomViewPagerFragmentAdapter extends FragmentPagerAdapter {
-    private final ArrayList<LocationWrapper> mCitiesList = new ArrayList<>();
 
+    private final ArrayList<LocationWrapper> mCitiesList = new ArrayList<>();
 
     public CustomViewPagerFragmentAdapter(FragmentManager fm) {
         super(fm);

@@ -8,16 +8,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import ada.osc.myfirstweatherapp.R;
-import ada.osc.myfirstweatherapp.ui.addLocation.AddLocationFragment;
+import ada.osc.myfirstweatherapp.presentation.location.AddLocationActivityPresenter;
+import ada.osc.myfirstweatherapp.ui.addLocation.fragments.AddLocationFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by Filip on 10/02/2016.
  */
-public class AddNewLocationActivity extends AppCompatActivity {
+public class AddLocationActivity extends AppCompatActivity implements AddLocationContract.View{
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
+
+    private AddLocationContract.Presenter mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,11 +28,15 @@ public class AddNewLocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_location);
         ButterKnife.bind(this);
 
+        mPresenter = new AddLocationActivityPresenter();
+        mPresenter.setView(this);
+
         initFragment();
         initToolbar();
     }
 
-    private void initFragment() {
+    @Override
+    public void initFragment() {
         if (getSupportFragmentManager().findFragmentById(R.id.add_location_activity_frame_layout) == null) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -39,7 +46,8 @@ public class AddNewLocationActivity extends AppCompatActivity {
         }
     }
 
-    private void initToolbar() {
+    @Override
+    public void initToolbar() {
         if (mToolbar != null) {
             mToolbar.setTitle(R.string.add_location_activity_title);
         }
