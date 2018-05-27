@@ -28,6 +28,11 @@ public class WeatherActivity extends AppCompatActivity {
     @BindView(R.id.main_activity_navigation_view) NavigationView mNavigationView;
     @BindView(R.id.main_activity_view_pager) ViewPager viewPager;
 
+
+    /*private Toolbar mToolbar;
+    private DrawerLayout drawerLayout;
+    private NavigationView mNavigationView;
+    private ViewPager viewPager;*/
     private CustomViewPagerFragmentAdapter adapter;
 
     @Override
