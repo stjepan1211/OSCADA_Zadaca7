@@ -12,17 +12,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import ada.osc.myfirstweatherapp.App;
 import ada.osc.myfirstweatherapp.Constants;
 import ada.osc.myfirstweatherapp.R;
 import ada.osc.myfirstweatherapp.model.WeatherResponse;
 import ada.osc.myfirstweatherapp.networking.ApiService;
+import ada.osc.myfirstweatherapp.networking.RetrofitUtil;
 import ada.osc.myfirstweatherapp.util.NetworkUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by Filip on 26/03/2016.
@@ -62,10 +63,20 @@ public class WeatherFragment extends Fragment {
         super.onStart();
         String cityToDisplay = getArguments().getString(Constants.CITY_BUNDLE_KEY);
 
-        App.getRetrofit().create(ApiService.class).getWeather(Constants.APP_ID, cityToDisplay).enqueue(new Callback<WeatherResponse>() {
+        if(!NetworkUtils.checkIfInternetConnectionIsAvailable(getActivity().getApplicationContext())){
+            toastMessage("Not connected");
+            return;
+        }
+        Retrofit retrofit = RetrofitUtil.createRetrofit();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<WeatherResponse> weatherCall = apiService.getWeather(Constants.APP_ID, cityToDisplay);
+
+        weatherCall.enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-                if (response != null && response.body() != null) {
+                if (response != null && response.body() != null && response.isSuccessful()) {
                     WeatherResponse data = response.body();
 
                     setCurrentTemperatureValues(data.getMain().getTemp_max());
@@ -120,5 +131,9 @@ public class WeatherFragment extends Fragment {
     private void refreshCurrentData() {
         if (NetworkUtils.checkIfInternetConnectionIsAvailable(getActivity())) {
         }
+    }
+
+    private void toastMessage(String message){
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
